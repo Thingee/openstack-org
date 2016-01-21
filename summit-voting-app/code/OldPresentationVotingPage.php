@@ -15,7 +15,7 @@
  * Used to vote on summit presentations
  */
 
-class PresentationVotingPage extends Page {
+class OldPresentationVotingPage extends Page {
   static $db = array(
   );
   static $has_one = array(
@@ -29,7 +29,7 @@ class PresentationVotingPage extends Page {
 
 }
  
-class PresentationVotingPage_Controller extends Page_Controller {
+class OldPresentationVotingPage_Controller extends Page_Controller {
 
     static $allowed_actions = array(
           'SpeakerVotingLoginForm',
@@ -174,8 +174,8 @@ class PresentationVotingPage_Controller extends Page_Controller {
               ->leftJoin("Presentation_Speakers", "Presentation_Speakers.PresentationID = Presentation.ID")
               ->leftJoin("PresentationSpeaker", "PresentationSpeaker.ID = Presentation_Speakers.PresentationSpeakerID")
               ->where("
-                  Presentation.Title LIKE '%{$k}%' 
-                  OR Presentation.Description LIKE '%{$k}%'
+                  SummitEvent.Title LIKE '%{$k}%' 
+                  OR SummitEvent.Description LIKE '%{$k}%'
                   OR PresentationSpeaker.FirstName LIKE '%{$k}%'
                   OR PresentationSpeaker.LastName LIKE '%{$k}%'
             ");
@@ -225,11 +225,11 @@ class PresentationVotingPage_Controller extends Page_Controller {
         ->where("SummitEvent.SummitID = {$summitID}");
 
       if($CategoryID) $presentations = $presentations->filter('CategoryID', $CategoryID);
-      if($currentMemberID) {
-          $presentations = $presentations
-                          ->leftJoin("PresentationVote", "PresentationVote.PresentationID = Presentation.ID")
-                          ->where("IFNULL(PresentationVote.MemberID,0) = " . Member::currentUserID());              
-      }
+      // if($currentMemberID) {
+      //     $presentations = $presentations
+      //                     //->leftJoin("PresentationVote", "PresentationVote.PresentationID = Presentation.ID")
+      //                     ->where("IFNULL(PresentationVote.MemberID,0) = " . Member::currentUserID());              
+      // }
 
       if($presentations->count()) $Result = $presentations->first();
 
